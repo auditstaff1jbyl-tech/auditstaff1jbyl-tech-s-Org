@@ -1,0 +1,6 @@
+{
+  "name": "EOD Monitoring Matrix — Executive Decision Dashboard",
+  "description": "Operational audit, real-time variance monitoring, branch risk analysis, and action tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
