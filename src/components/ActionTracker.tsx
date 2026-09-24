@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { ActionItem, Branch, Staff, PriorityLevel, ActionStatus } from '../types';
 import { formatDate } from '../utils/formatters';
+import { StatusIndicator } from './StatusIndicator';
 
 interface ActionTrackerProps {
   actionItems: ActionItem[];
@@ -273,47 +274,36 @@ export const ActionTracker: React.FC<ActionTrackerProps> = ({
           </div>
         ) : (
           filteredItems.map(item => {
-            const priorityClass =
-              item.priority === 'High'
-                ? 'bg-red-100 text-red-800 border-red-200'
-                : item.priority === 'Medium'
-                ? 'bg-amber-100 text-amber-800 border-amber-200'
-                : 'bg-blue-100 text-blue-800 border-blue-200';
-
-            const statusClass =
-              item.status === 'Resolved'
-                ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                : item.status === 'In Progress'
-                ? 'bg-amber-100 text-amber-800 border-amber-200'
-                : 'bg-red-100 text-red-800 border-red-200';
-
             return (
               <div
                 key={item.id}
-                className="bg-white border border-[#EAE3D5] rounded-2xl p-4 shadow-xs hover:border-[#C5A059] transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs"
+                className="bg-white border border-[#EAE3D5] rounded-xl p-4 shadow-2xs hover:border-[#C5A059] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs"
               >
                 <div className="space-y-1.5 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`px-2 py-0.5 rounded-full font-mono text-[9.5px] font-bold border ${priorityClass}`}>
-                      {item.priority} Priority
-                    </span>
-                    <span className={`px-2 py-0.5 rounded-full font-mono text-[9.5px] font-bold border ${statusClass}`}>
-                      {item.status}
-                    </span>
+                    <StatusIndicator type="priority" value={item.priority} />
+                    <span aria-hidden="true" className="text-stone-300">·</span>
+                    <StatusIndicator type="action" value={item.status} />
                     {(item.targetBranch || item.branch) && (
-                      <span className="flex items-center gap-1 text-[11px] font-bold text-gray-800 bg-[#FAF7F2] px-2 py-0.5 rounded-lg border border-[#EAE3D5]">
-                        <Building2 className="w-3 h-3 text-[#C5A059]" />
-                        {item.targetBranch || item.branch}
-                      </span>
+                      <>
+                        <span aria-hidden="true" className="text-stone-300">·</span>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-stone-700">
+                          <Building2 className="w-3 h-3 text-[#C5A059]" />
+                          {item.targetBranch || item.branch}
+                        </span>
+                      </>
                     )}
                     {(item.targetStaff || item.staffName) && (
-                      <span className="text-[11px] text-[#6C655B] font-semibold">
-                        Target Staff: <strong>{item.targetStaff || item.staffName}</strong>
-                      </span>
+                      <>
+                        <span aria-hidden="true" className="text-stone-300">·</span>
+                        <span className="text-[11px] text-stone-600">
+                          Target: <strong className="font-medium text-stone-900">{item.targetStaff || item.staffName}</strong>
+                        </span>
+                      </>
                     )}
                   </div>
 
-                  <h3 className="font-bold text-gray-900 text-sm">{item.title || item.actionRequired || 'Action Directive'}</h3>
+                  <h3 className="font-semibold text-stone-900 text-sm">{item.title || item.actionRequired || 'Action Directive'}</h3>
 
                   {(item.description || item.notes) && (
                     <p className="text-[#4A4641] leading-relaxed text-[11.5px]">{item.description || item.notes}</p>

@@ -60,6 +60,7 @@ export default function App() {
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<string>('overview');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Navigation Parameters for Deep Linking
   const [matrixInitialBranch, setMatrixInitialBranch] = useState<string | undefined>();
@@ -281,6 +282,8 @@ export default function App() {
         actionItems={actionItems}
         onExportBackup={handleExportBackup}
         onImportClick={handleTriggerImport}
+        isMobileOpen={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
       {/* Main Content Area */}
@@ -293,6 +296,7 @@ export default function App() {
           currentUser={currentUser}
           onNavigateToMatrix={() => handleNavigateToMatrix()}
           onSignOut={handleSignOut}
+          onToggleMobileMenu={() => setIsMobileMenuOpen(prev => !prev)}
         />
 
         {/* Dynamic Tab Body */}

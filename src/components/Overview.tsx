@@ -38,6 +38,7 @@ import {
 } from '../utils/analytics';
 import { formatPHP, formatNumber } from '../utils/formatters';
 import { BranchDrilldownModal } from './BranchDrilldownModal';
+import { StatusIndicator } from './StatusIndicator';
 
 interface OverviewProps {
   records: EODRecord[];
@@ -551,28 +552,28 @@ export const Overview: React.FC<OverviewProps> = ({
             <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#FAF2E5]">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#C5A059]" />
-                <h3 className="font-serif font-bold text-sm text-gray-900 tracking-tight">
+                <h3 className="font-serif font-bold text-sm text-stone-900 tracking-tight">
                   Executive Management Takeaways
                 </h3>
               </div>
-              <span className="text-[10px] font-mono uppercase bg-[#FAF2E5] text-[#A67C30] font-bold px-2 py-0.5 rounded-md">
-                Auto-Synthesized
+              <span className="text-[11px] font-medium text-stone-500">
+                Data Synthesized
               </span>
             </div>
-            <ul className="space-y-2.5 text-xs text-[#4A4641] leading-relaxed">
+            <ul className="space-y-2.5 text-xs text-stone-700 leading-relaxed">
               {takeaways.map((takeaway, i) => (
                 <li key={i} className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#C5A059] mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] mt-1.5 shrink-0" />
                   <span>{takeaway}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="mt-4 pt-3 border-t border-[#FAF2E5] flex items-center justify-between text-[11px] text-[#6C655B]">
+          <div className="mt-4 pt-3 border-t border-[#FAF2E5] flex items-center justify-between text-[11px] text-stone-500">
             <span>
               Comparative basis: {isComparable ? `${prevFrom} to ${prevTo}` : 'Current dataset aggregate'}
             </span>
-            <span className="font-mono font-bold text-gray-800">Operational Integrity Grade: A-</span>
+            <span className="font-mono font-semibold text-stone-800">Integrity Grade: A-</span>
           </div>
         </div>
 
@@ -581,41 +582,42 @@ export const Overview: React.FC<OverviewProps> = ({
             <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#FAF2E5]">
               <div className="flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-red-600" />
-                <h3 className="font-serif font-bold text-sm text-gray-900 tracking-tight">
+                <h3 className="font-serif font-bold text-sm text-stone-900 tracking-tight">
                   Priority Action Recommendations
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-gray-500">Sorted by risk exposure</span>
+              <span className="text-[10px] font-mono text-stone-400">Risk Weighted</span>
             </div>
             <div className="space-y-2.5">
-              {recommendations.map(rec => {
-                const badgeColor =
-                  rec.priority === 'Priority 1'
-                    ? 'bg-red-100 text-red-800 border-red-200'
-                    : rec.priority === 'Priority 2'
-                    ? 'bg-amber-100 text-amber-800 border-amber-200'
-                    : 'bg-blue-100 text-blue-800 border-blue-200';
-                return (
-                  <div key={rec.id} className="p-2.5 rounded-xl border border-[#EAE3D5] bg-[#FAF7F2]/40 text-xs">
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border font-mono ${badgeColor}`}>
-                        {rec.priorityLabel}
-                      </span>
-                      <span className="font-bold text-gray-900 text-[11px]">
-                        {rec.targetType}: {rec.targetName}
-                      </span>
-                    </div>
-                    <p className="font-medium text-gray-800 leading-snug">{rec.actionText}</p>
-                    <p className="text-[10.5px] text-[#6C655B] mt-1 font-mono">Reason: {rec.reason}</p>
+              {recommendations.map(rec => (
+                <div key={rec.id} className="p-3 rounded-xl border border-[#EAE3D5] bg-[#FAF7F2]/40 text-xs">
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="inline-flex items-center text-xs font-semibold text-stone-800">
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full mr-1.5 shrink-0 ${
+                          rec.priority === 'Priority 1'
+                            ? 'bg-red-600'
+                            : rec.priority === 'Priority 2'
+                            ? 'bg-amber-500'
+                            : 'bg-blue-500'
+                        }`}
+                      />
+                      {rec.priorityLabel}
+                    </span>
+                    <span className="font-medium text-stone-700 text-[11px]">
+                      {rec.targetType}: {rec.targetName}
+                    </span>
                   </div>
-                );
-              })}
+                  <p className="font-medium text-stone-900 leading-snug">{rec.actionText}</p>
+                  <p className="text-[11px] text-stone-500 mt-1">Reason: {rec.reason}</p>
+                </div>
+              ))}
             </div>
           </div>
           <div className="mt-4 pt-3 border-t border-[#FAF2E5] flex justify-end">
             <button
               onClick={() => onNavigateToTracker()}
-              className="text-xs text-[#C5A059] hover:text-[#9A7A38] font-bold flex items-center gap-1 cursor-pointer"
+              className="text-xs text-[#C5A059] hover:text-[#9A7A38] font-semibold flex items-center gap-1 cursor-pointer transition-colors"
             >
               <span>View Remediation Action Tracker</span>
               <ArrowRight className="w-3 h-3" />
@@ -656,15 +658,6 @@ export const Overview: React.FC<OverviewProps> = ({
             </thead>
             <tbody className="divide-y divide-[#FAF7F2]">
               {branchMetrics.map((bm, index) => {
-                const tierClass =
-                  bm.riskLevel === 'Critical'
-                    ? 'bg-red-100 text-red-800 border-red-200'
-                    : bm.riskLevel === 'High'
-                    ? 'bg-orange-100 text-orange-800 border-orange-200'
-                    : bm.riskLevel === 'Moderate'
-                    ? 'bg-amber-100 text-amber-800 border-amber-200'
-                    : 'bg-emerald-100 text-emerald-800 border-emerald-200';
-
                 return (
                   <tr
                     key={bm.branch.id}
@@ -673,53 +666,51 @@ export const Overview: React.FC<OverviewProps> = ({
                   >
                     <td className="p-3">
                       <div className="flex items-center gap-2.5">
-                        <span className="w-5 h-5 rounded-full bg-[#121110] text-[#C5A059] flex items-center justify-center font-mono font-bold text-[10px]">
+                        <span className="w-5 h-5 rounded-md bg-[#121110] text-[#C5A059] flex items-center justify-center font-mono tabular-nums font-bold text-[10px]">
                           #{index + 1}
                         </span>
                         <div>
-                          <span className="font-bold text-gray-900 text-sm block">{bm.branch.name}</span>
-                          <span className="text-[10px] text-[#6C655B] font-mono">
+                          <span className="font-semibold text-stone-900 text-sm block">{bm.branch.name}</span>
+                          <span className="text-[10px] text-stone-500 font-mono">
                             {bm.branch.code || `ID: ${bm.branch.id}`}
                           </span>
                         </div>
                       </div>
                     </td>
-                    <td className="p-3 text-center font-mono font-bold text-gray-800">{bm.issues}</td>
-                    <td className="p-3 text-right font-mono font-extrabold text-red-600 text-sm">
+                    <td className="p-3 text-center font-mono tabular-nums font-bold text-stone-800">{bm.issues}</td>
+                    <td className="p-3 text-right font-mono tabular-nums font-bold text-red-700 text-sm">
                       {formatPHP(bm.financialExposure)}
                     </td>
                     <td className="p-3 text-center">
-                      <div className="flex items-center justify-center gap-1 font-mono text-[11px]">
+                      <div className="flex items-center justify-center gap-1 font-mono tabular-nums text-[11px]">
                         {bm.trendDirection === 'Increasing' ? (
-                          <span className="text-red-600 font-bold flex items-center">
+                          <span className="text-red-700 font-semibold flex items-center">
                             <TrendingUp className="w-3 h-3 mr-0.5" />+{bm.trendPercentage.toFixed(1)}%
                           </span>
                         ) : bm.trendDirection === 'Decreasing' ? (
-                          <span className="text-emerald-600 font-bold flex items-center">
+                          <span className="text-emerald-700 font-semibold flex items-center">
                             <TrendingDown className="w-3 h-3 mr-0.5" />-{bm.trendPercentage.toFixed(1)}%
                           </span>
                         ) : (
-                          <span className="text-gray-500 font-medium">Stable</span>
+                          <span className="text-stone-500 font-medium">Stable</span>
                         )}
                       </div>
                     </td>
                     <td className="p-3 text-center">
-                      <span className="px-2 py-0.5 rounded-full bg-[#FAF7F2] border border-[#EAE3D5] text-[10px] font-semibold text-gray-800">
+                      <span className="text-xs font-medium text-stone-800">
                         {bm.mostCommonIssueType}
                       </span>
                     </td>
                     <td className="p-3 text-center">
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${tierClass}`}>
-                        {bm.riskLevel}
-                      </span>
+                      <StatusIndicator type="risk" value={bm.riskLevel} />
                     </td>
-                    <td className="p-3 text-center font-mono">
+                    <td className="p-3 text-center font-mono tabular-nums">
                       {bm.unresolvedActions > 0 ? (
-                        <span className="px-2 py-0.5 rounded-full bg-red-50 text-red-700 font-bold text-[10px] border border-red-200">
+                        <span className="text-xs font-semibold text-red-700">
                           {bm.unresolvedActions} Open
                         </span>
                       ) : (
-                        <span className="text-gray-400 text-[10px]">None</span>
+                        <span className="text-stone-400 text-xs">None</span>
                       )}
                     </td>
                     <td className="p-3 text-center">

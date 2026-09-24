@@ -13,6 +13,7 @@ import {
 import { Staff, Branch, EODRecord, ActionItem, RiskSettings } from '../types';
 import { calculateStaffRiskMetrics } from '../utils/analytics';
 import { formatPHP } from '../utils/formatters';
+import { StatusIndicator } from './StatusIndicator';
 
 interface StaffMonitoringProps {
   staffList: Staff[];
@@ -274,59 +275,49 @@ export const StaffMonitoring: React.FC<StaffMonitoringProps> = ({
                   const staffObj = staffList.find(s => s.id === sm.staffId);
                   const isInactive = staffObj?.status === 'Inactive';
 
-                  const tierClass =
-                    sm.riskLevel === 'Critical'
-                      ? 'bg-red-100 text-red-800 border-red-200'
-                      : sm.riskLevel === 'High'
-                      ? 'bg-orange-100 text-orange-800 border-orange-200'
-                      : sm.riskLevel === 'Moderate'
-                      ? 'bg-amber-100 text-amber-800 border-amber-200'
-                      : 'bg-emerald-100 text-emerald-800 border-emerald-200';
-
                   return (
                     <tr key={sm.staffId} className="hover:bg-[#FAF7F2]/60 transition-colors">
                       <td className="p-3">
-                        <div className="font-bold text-gray-900 text-sm">{sm.staffName}</div>
-                        <div className="text-[10.5px] text-[#6C655B]">{sm.position}</div>
+                        <div className="font-semibold text-stone-900 text-sm">{sm.staffName}</div>
+                        <div className="text-[11px] text-stone-500">{sm.position}</div>
                       </td>
-                      <td className="p-3 font-semibold text-gray-800">{sm.branch}</td>
+                      <td className="p-3 font-medium text-stone-800">{sm.branch}</td>
                       <td className="p-3 text-center">
-                        <span
-                          className={`px-2 py-0.5 rounded-full font-mono text-[9px] font-bold ${
-                            isInactive ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-800'
-                          }`}
-                        >
-                          {isInactive ? 'Inactive' : 'Active'}
+                        <span className="inline-flex items-center text-xs text-stone-700">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full mr-1.5 shrink-0 ${
+                              isInactive ? 'bg-stone-400' : 'bg-emerald-500'
+                            }`}
+                          />
+                          <span>{isInactive ? 'Inactive' : 'Active'}</span>
                         </span>
                       </td>
-                      <td className="p-3 text-center font-mono font-bold text-gray-800">
+                      <td className="p-3 text-center font-mono tabular-nums font-bold text-stone-800">
                         {sm.issueCount}
                       </td>
-                      <td className="p-3 text-center font-mono">
+                      <td className="p-3 text-center font-mono tabular-nums">
                         {sm.repeatIncidentCount > 0 ? (
-                          <span className="px-2 py-0.5 rounded bg-red-50 text-red-700 font-bold text-[10px] border border-red-200">
+                          <span className="font-semibold text-red-700 text-xs">
                             {sm.repeatIncidentCount}
                           </span>
                         ) : (
-                          <span className="text-gray-400 text-[10px]">0</span>
+                          <span className="text-stone-400 text-xs">0</span>
                         )}
                       </td>
-                      <td className="p-3 text-right font-mono font-bold text-red-600">
+                      <td className="p-3 text-right font-mono tabular-nums font-bold text-red-700">
                         {formatPHP(sm.financialExposure)}
                       </td>
                       <td className="p-3 text-center">
-                        <span className="px-2 py-0.5 rounded-full bg-[#FAF7F2] border border-[#EAE3D5] text-[10px] text-gray-800 font-medium">
+                        <span className="text-xs text-stone-700 font-medium">
                           {sm.primaryIssueType}
                         </span>
                       </td>
-                      <td className="p-3 text-center font-mono font-extrabold text-sm text-gray-900">
+                      <td className="p-3 text-center font-mono tabular-nums font-bold text-sm text-stone-900">
                         {sm.riskScore}
-                        <span className="text-[10px] text-gray-400 font-normal">/100</span>
+                        <span className="text-[11px] text-stone-400 font-normal">/100</span>
                       </td>
                       <td className="p-3 text-center">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${tierClass}`}>
-                          {sm.riskLevel}
-                        </span>
+                        <StatusIndicator type="risk" value={sm.riskLevel} />
                       </td>
                       <td className="p-3 text-center">
                         <div className="flex items-center justify-center gap-1.5">

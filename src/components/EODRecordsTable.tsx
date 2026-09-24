@@ -12,6 +12,7 @@ import {
 import { EODRecord, Branch } from '../types';
 import { formatPHP, formatDate } from '../utils/formatters';
 import { ImageZoomModal } from './ImageZoomModal';
+import { StatusIndicator } from './StatusIndicator';
 
 interface EODRecordsTableProps {
   records: EODRecord[];
@@ -253,29 +254,17 @@ export const EODRecordsTable: React.FC<EODRecordsTableProps> = ({
               ) : (
                 paginatedRecords.map(rec => (
                   <tr key={rec.id} className="hover:bg-[#FAF7F2]/60 transition-colors">
-                    <td className="p-3 font-mono font-semibold text-gray-800">{formatDate(rec.date)}</td>
-                    <td className="p-3 font-bold text-gray-900">{rec.branch}</td>
-                    <td className="p-3 text-gray-800">{rec.staffName}</td>
-                    <td className="p-3 font-semibold text-gray-900">{rec.issueType}</td>
+                    <td className="p-3 font-mono tabular-nums font-semibold text-stone-800">{formatDate(rec.date)}</td>
+                    <td className="p-3 font-semibold text-stone-900">{rec.branch}</td>
+                    <td className="p-3 text-stone-800 font-medium">{rec.staffName}</td>
+                    <td className="p-3 font-medium text-stone-900">{rec.issueType}</td>
                     <td className="p-3 text-center">
-                      <span
-                        className={`inline-block px-2 py-0.5 rounded-full font-mono text-[9.5px] font-extrabold ${
-                          rec.varianceStatus === 'G'
-                            ? 'bg-green-100 text-green-800'
-                            : rec.varianceStatus === 'Y'
-                            ? 'bg-amber-100 text-amber-800'
-                            : rec.varianceStatus === 'R'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}
-                      >
-                        {rec.varianceStatus}
-                      </span>
+                      <StatusIndicator type="variance" value={rec.varianceStatus} />
                     </td>
-                    <td className="p-3 max-w-xs truncate text-gray-600">
+                    <td className="p-3 max-w-xs truncate text-stone-600">
                       {rec.items?.map(it => `${it.quantity}x ${it.itemName}`).join(', ') || '—'}
                     </td>
-                    <td className="p-3 text-right font-mono font-extrabold text-red-600 text-sm">
+                    <td className="p-3 text-right font-mono tabular-nums font-bold text-red-700 text-sm">
                       {formatPHP(rec.totalFinancialImpact)}
                     </td>
                     <td className="p-3 text-center">

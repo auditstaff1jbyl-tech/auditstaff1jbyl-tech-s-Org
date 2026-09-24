@@ -22,6 +22,7 @@ import {
   RiskSettings,
 } from '../types';
 import { formatPHP } from '../utils/formatters';
+import { SupabaseSecurityView } from './SupabaseSecurityView';
 
 interface SettingsTabProps {
   branches: Branch[];
@@ -54,7 +55,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   onImportBackup,
   onResetDatabase,
 }) => {
-  const [activeSection, setActiveSection] = useState<'branches' | 'items' | 'issues' | 'risk' | 'data'>('branches');
+  const [activeSection, setActiveSection] = useState<'branches' | 'items' | 'issues' | 'risk' | 'data' | 'supabase'>('branches');
 
   // Branch Form
   const [branchName, setBranchName] = useState('');
